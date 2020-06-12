@@ -1,4 +1,5 @@
 let userChoose;
+let score = 0;
 
 let Question = function (question, answers, correctAnswer) {
   this.question = question;
@@ -13,25 +14,33 @@ Question.prototype.randomGen = function () {
     console.log(`${randomQuestion}`);
     console.log(`${q1.answers}`);
     userChoose = prompt('Type the correct answer.');
-    userChoose == q1.correctAnswer ? userChoose = 'correct' : userChoose = 'nope';
-    console.log(userChoose);
+    userChoose == q1.correctAnswer ? (userChoose = 'Correct!', score += 1, console.log(userChoose + ' your score is ' + score)) : (userChoose = 'Nope, try again.', score = 0, console.log(userChoose + ' your score is reset'));
+    this.gameOver();
     this.nextQuestion();
   } else if (randomQuestion === 'What is the largest mammal on the planet?') {
     console.log(`${randomQuestion}`);
     console.log(`${q2.answers}`);
     userChoose = prompt('Type the correct answer.');
-    userChoose == q2.correctAnswer ? userChoose = 'correct' : userChoose = 'nope';
-    console.log(userChoose);
+    userChoose == q2.correctAnswer ? (userChoose = 'Correct!', score += 1, console.log(userChoose + ' your score is ' + score)) : (userChoose = 'Nope, try again.', score = 0, console.log(userChoose + ' your score is reset'));
+    this.gameOver();
     this.nextQuestion();
   } else if (randomQuestion === 'Where is claimed to be the birthplace of civilization?') {
     console.log(`${randomQuestion}`);
     console.log(`${q3.answers}`);
     userChoose = prompt('Type the correct answer.');
-    userChoose == q3.correctAnswer ? userChoose = 'correct' : userChoose = 'nope';
-    console.log(userChoose);
+    userChoose == q3.correctAnswer ? (userChoose = 'Correct!', score += 1, console.log(userChoose + ' your score is ' + score)) : (userChoose = 'Nope, try again.', score = 0, console.log(userChoose + ' your score is reset'));
+    this.gameOver();
     this.nextQuestion();
   }
+};
 
+Question.prototype.gameOver = function () {
+  if (score === 5) {
+    alert('WINNER');
+  }
+  {
+    return;
+  }
 };
 
 Question.prototype.nextQuestion = function () {
