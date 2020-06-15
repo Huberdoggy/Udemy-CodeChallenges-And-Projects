@@ -207,7 +207,8 @@ let UIController = (function () {
     expensesLabel: '.budget__expenses--value',
     percentageLabel: '.budget__expenses--percentage',
     container: '.container',
-    expensesPercLabel: '.item__percentage'
+    expensesPercLabel: '.item__percentage',
+    dateLabel: '.budget__title--month'
   };
   //Public method within the IIFE
   let formatNumber = function (num, type) {
@@ -229,6 +230,11 @@ let UIController = (function () {
     return (type === 'exp' ? '-' : '+') + int + '.' + dec;
   };
 
+  let nodeListForEach = function (list, callback) {
+    for (let i = 0; i < list.length; i++) {
+      callback(list[i], i);
+    }
+  };
 
 
   return {
@@ -311,12 +317,6 @@ let UIController = (function () {
     displayPercentages: function (percentages) {
       let fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
 
-      let nodeListForEach = function (list, callback) {
-        for (let i = 0; i < list.length; i++) {
-          callback(list[i], i);
-        }
-      };
-
       nodeListForEach(fields, function (current, index) {
         if (percentages[index] > 0) {
           current.textContent = percentages[index] + '%';
@@ -327,7 +327,32 @@ let UIController = (function () {
 
     },
 
+    displayMonth: function () {
+      let now, month, months, year;
+      // let christmas = new Date(2020, 11, 25)// zero based so 11 = 12 aka December
 
+      now = new Date();
+
+      months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      month = now.getMonth();
+      year = now.getFullYear();
+      document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
+    },
+
+    changedType: function () {
+
+      let fields = document.querySelectorAll(
+        `${DOMstrings.inputType},${DOMstrings.inputDescription},${DOMstrings.inputValue}`);
+
+
+
+      nodeListForEach(fields, function (cur) {
+        cur.classList.toggle('red-focus');
+      });
+
+      document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
+
+    },
     //Expose DOMstrings to Public
     getDOMstrings: function () {
       return DOMstrings;
@@ -370,7 +395,7 @@ let controller = (function (budgetCtrl, UICtrl) {
     });
     // Adds event listener to the div associated with the income/expense container declared up in DOMstrings --> this way we dont have to add listener to each item ..bubble up effect
     document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
-
+    document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
 
   };
 
@@ -450,6 +475,7 @@ let controller = (function (budgetCtrl, UICtrl) {
   //a place for code we want executed when app first starts
   return {
     init: function () {
+      UICtrl.displayMonth();
       UICtrl.displayBudget({
         budget: 0,
         totalInc: 0,
